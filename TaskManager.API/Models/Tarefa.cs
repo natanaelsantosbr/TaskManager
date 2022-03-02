@@ -22,5 +22,15 @@ namespace TaskManager.API.Models
         public bool Concluido { get; private set; }
         public DateTime DataDoCadastro { get; private set; }
         public DateTime? DataConclusao { get; private set; }
+
+        public void AtualizarTarefa(string nome, string detalhes, bool? concluido = false)
+        {
+            this.Nome = nome;
+            this.Detalhes = detalhes;
+            this.Concluido = concluido ?? false;
+
+            if (this.Concluido)
+                this.DataConclusao = DateTime.Now;
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using TaskManager.API.Models;
+using TaskManager.API.Models.InputModels;
 using TaskManager.API.Repositories;
 
 namespace TaskManager.API.Controllers
@@ -14,37 +16,65 @@ namespace TaskManager.API.Controllers
         {
             _tarefasRepository = tarefasRepository;
         }
-
-        // GET: api/<TarefasController>
+                
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_tarefasRepository.Buscar());
         }
-
-        // GET api/<TarefasController>/5
+                
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(string id)
         {
-            return "value";
-        }
+            var tarefa = _tarefasRepository.Buscar(id);
 
-        // POST api/<TarefasController>
+            if(tarefa == null)
+                return NotFound();
+
+            return Ok(tarefa);
+        }
+                
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] TarefaInputModel novaTarefa)
         {
+            var tarefa = new Tarefa(novaTarefa.Nome, novaTarefa.Detalhes);
+
+            _tarefasRepository.Adicionar(tarefa);
+            return Created("", tarefa);
         }
 
-        // PUT api/<TarefasController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(string id, [FromBody] TarefaInputModel tarefaAtualizada)
         {
+            var tarefa = _tarefasRepository.Buscar(id);
+
+            if (tarefa == null)
+                return NotFound();
+
+
+            tarefa.AtualizarTarefa(tarefaAtualizada.Nome, tarefaAtualizada.Detalhes, tarefaAtualizada.Concluido);
+
+            _tarefasRepository.Atualizar(id, tarefa);
+
+            return Ok(tarefa);
+            
         }
 
         // DELETE api/<TarefasController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(string id)
         {
+            var tarefa = _tarefasRepository.Buscar(id);
+
+            if (tarefa == null)
+                return NotFound();
+
+            _tarefasRepository.Remover(id);
+
+            return NoContent();
+
+
+
         }
     }
 }

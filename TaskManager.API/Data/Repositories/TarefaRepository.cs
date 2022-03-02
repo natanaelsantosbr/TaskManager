@@ -36,5 +36,10 @@ namespace TaskManager.API.Repositories
         {
             return _tarefas.Find(t => t.Id == id).FirstOrDefault();
         }
+
+        public void Remover(string id)
+        {            
+            _tarefas.DeleteOne(t => t.Id == id); 
+        }
     }
 }
