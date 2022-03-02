@@ -19,22 +19,22 @@ namespace TaskManager.API.Repositories
 
         public void Adicionar(Tarefa tarefa)
         {
-            throw new System.NotImplementedException();
+            _tarefas.InsertOne(tarefa);            
         }
 
-        public void Atualizar(string id, Tarefa tarefa)
+        public void Atualizar(string id, Tarefa tarefaAtualizada)
         {
-            throw new System.NotImplementedException();
+            _tarefas.ReplaceOne(t => t.Id == id, tarefaAtualizada);
         }
 
         public IEnumerable<Tarefa> Buscar()
         {
-            throw new System.NotImplementedException();
+            return _tarefas.Find(t => true).ToList();
         }
 
         public Tarefa Buscar(string id)
         {
-            throw new System.NotImplementedException();
+            return _tarefas.Find(t => t.Id == id).FirstOrDefault();
         }
     }
 }
